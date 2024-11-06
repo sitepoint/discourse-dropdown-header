@@ -87,7 +87,11 @@ export default class CustomHeaderLink extends Component {
         )}}
       >
         <CustomIcon @icon={{@item.icon}} />
-        <span class="custom-header-link-title">{{@item.title}}</span>
+        {{#if @item.url}}
+          <a href={{@item.url}} class="custom-header-link-title">{{@item.title}}</a>
+        {{else}}
+          <span class="custom-header-link-title">{{@item.title}}</span>
+        {{/if}}
 
         {{#if this.showCaret}}
           <span class="custom-header-link-caret">
