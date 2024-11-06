@@ -14,6 +14,7 @@ export default class CustomHeaderLink extends Component {
   @service siteSettings;
   @service site;
   @service currentUser;
+  @service router;
 
   @notEmpty("dropdownLinks") hasDropdown;
 
@@ -65,12 +66,18 @@ export default class CustomHeaderLink extends Component {
   }
 
   @action
-  redirectToUrl(url) {
+  redirectToUrl(url, event) {
     if (this.site.mobileView) {
       this.toggleHeaderLinks();
     }
 
-    DiscourseURL.routeTo(url);
+    const regex = new RegExp(`^${this.router.rootURL}`);
+    if (regex.test(url)) {
+      event.preventDefault();
+      DiscourseURL.routeTo(url);
+    }
+
+    event.stopPropagation();
   }
 
   <template>
@@ -87,7 +94,11 @@ export default class CustomHeaderLink extends Component {
         )}}
       >
         <CustomIcon @icon={{@item.icon}} />
-        <span class="custom-header-link-title">{{@item.title}}</span>
+        {{#if @item.url}}
+          <a href={{@item.url}} class="custom-header-link-title">{{@item.title}}</a>
+        {{else}}
+          <span class="custom-header-link-title">{{@item.title}}</span>
+        {{/if}}
 
         {{#if this.showCaret}}
           <span class="custom-header-link-caret">
