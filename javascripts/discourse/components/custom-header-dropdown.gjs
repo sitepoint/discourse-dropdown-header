@@ -16,7 +16,11 @@ export default class CustomHeaderDropdown extends Component {
       this.toggleHeaderLinks();
     }
 
-    DiscourseURL.routeTo(url);
+    const regex = new RegExp(`^${this.router.rootURL}`);
+    if (regex.test(url)) {
+      event.preventDefault();
+      DiscourseURL.routeTo(url);
+    }
 
     event.stopPropagation();
   }
